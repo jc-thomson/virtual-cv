@@ -34,14 +34,10 @@ canvas{
 
 #hero{
 
-    position:absolute;
+    position:fixed;
 
-    top:50%;
-    left:50%;
-
-    transform:translate(-50%,-50%);
-
-    text-align:center;
+    top:30px;
+    left:30px;
 
     z-index:5;
 
@@ -50,27 +46,23 @@ canvas{
 
 #hero h1{
 
-    font-size:4rem;
+    font-size:2rem;
 
-    letter-spacing:4px;
-
-    margin-bottom:12px;
+    margin-bottom:8px;
 }
 
 #hero p{
 
-    font-size:1.3rem;
-
     color:#b8c5ff;
 
-    margin-bottom:10px;
+    margin-bottom:6px;
 }
 
 #hero span{
 
     color:#8e96a5;
 
-    font-size:.95rem;
+    font-size:.9rem;
 }
 
 #panel{

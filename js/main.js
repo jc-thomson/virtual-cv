@@ -1,8 +1,5 @@
-const panel = document.getElementById("panel");
-const closeButton = document.getElementById("closePanel");
+import { createScene } from "./scene.js";
 
-closeButton.addEventListener("click", () => {
-    panel.classList.add("hidden");
-});
+createScene();
 
 console.log("Portfolio loaded.");
