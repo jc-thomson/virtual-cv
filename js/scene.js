@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { createStars } from "./stars.js";
+import { createSun } from "./sun.js";
 
 export function createScene() {
 
@@ -15,8 +17,10 @@ export function createScene() {
         1000
     );
 
-    camera.position.z = 8;
+    camera.position.set(0, 0.3, 7.5);
 
+    const sun = createSun(scene);
+    
     const renderer = new THREE.WebGLRenderer({
 
         canvas,
@@ -40,50 +44,23 @@ export function createScene() {
 
     scene.add(ambientLight);
 
-    const sunLight =
-        new THREE.PointLight(
-            0xffdd88,
-            40,
-            100
-        );
-
-    scene.add(sunLight);
-
-    const geometry =
-        new THREE.SphereGeometry(
-            1,
-            64,
-            64
-        );
-
-    const material =
-        new THREE.MeshStandardMaterial({
-
-            color: 0xffd84d,
-
-            emissive: 0xffaa00,
-
-            emissiveIntensity: 2
-
-        });
-
-    const sun =
-        new THREE.Mesh(
-            geometry,
-            material
-        );
-
-    scene.add(sun);
+    const stars = createStars(scene);
+    const clock = new THREE.Clock();
 
     function animate() {
 
-        requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 
-        sun.rotation.y += 0.003;
+    const delta = clock.getDelta();
+    sun.update(delta);
 
-        renderer.render(scene, camera);
+    stars.rotation.y += 0.00015;
+    stars.rotation.x += 0.00005;
 
-    }
+    camera.position.x = Math.sin(Date.now() * 0.00015) * 0.15;
+    camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+}
 
     animate();
 
