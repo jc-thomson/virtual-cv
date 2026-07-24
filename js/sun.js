@@ -10,78 +10,84 @@ export function createSun(scene) {
 
     const vertexShader = `
 
-        varying vec3 vNormal;
+varying vec3 vWorldPosition;
+varying vec3 vNormal;
 
-        varying vec3 vPosition;
+uniform float time;
 
-        uniform float time;
+void main(){
 
-        void main() {
+    vec3 pos = position;
 
-            vNormal = normal;
+    float wave =
+        sin(position.x * 8.0 + time * 1.5) * 0.02 +
+        sin(position.y * 10.0 + time * 2.0) * 0.015 +
+        sin(position.z * 12.0 + time * 2.4) * 0.02;
 
-            vec3 pos = position;
+    pos += normal * wave;
 
-            float wave =
-                sin(position.y * 12.0 + time * 1.8) * 0.02 +
-                sin(position.x * 18.0 + time * 2.5) * 0.015 +
-                sin(position.z * 16.0 + time * 2.2) * 0.015;
+    vec4 worldPos = modelMatrix * vec4(pos,1.0);
 
-            pos += normal * wave;
+    vWorldPosition = worldPos.xyz;
 
-            vPosition = pos;
+    vNormal = normalize(mat3(modelMatrix) * normal);
 
-            gl_Position =
-                projectionMatrix *
-                modelViewMatrix *
-                vec4(pos,1.0);
+    gl_Position =
+        projectionMatrix *
+        viewMatrix *
+        worldPos;
 
-        }
-
-    `;
+}`;
 
     const fragmentShader = `
 
-        uniform float time;
+uniform float time;
 
-        varying vec3 vNormal;
+varying vec3 vWorldPosition;
+varying vec3 vNormal;
 
-        varying vec3 vPosition;
+void main(){
 
-        void main(){
+    vec3 viewDir =
+        normalize(cameraPosition - vWorldPosition);
 
-            float glow =
-                pow(
-                    1.0 - abs(dot(normalize(vNormal),vec3(0.0,0.0,1.0))),
-                    2.0
-                );
+    float fresnel =
+        pow(
+            1.0 - max(dot(viewDir,vNormal),0.0),
+            3.0
+        );
 
-            float plasma =
-                sin(vPosition.x*12.0 + time*3.0) *
-                sin(vPosition.y*12.0 + time*2.2) *
-                sin(vPosition.z*12.0 + time*2.7);
+    float plasma =
 
-            vec3 dark =
-                vec3(1.0,0.45,0.05);
+        sin(vWorldPosition.x*5.0 + time*2.0)
 
-            vec3 bright =
-                vec3(1.0,0.95,0.55);
+      + sin(vWorldPosition.y*7.0 + time*1.7)
 
-            vec3 color =
-                mix(
-                    dark,
-                    bright,
-                    plasma*0.5+0.5
-                );
+      + sin(vWorldPosition.z*6.0 + time*2.4);
 
-            color += glow * 0.6;
+    plasma = plasma / 3.0;
 
-            gl_FragColor =
-                vec4(color,1.0);
+    plasma = plasma * 0.5 + 0.5;
 
-        }
+    vec3 dark =
+        vec3(1.0,0.30,0.02);
 
-    `;
+    vec3 bright =
+        vec3(1.0,0.95,0.65);
+
+    vec3 colour =
+        mix(
+            dark,
+            bright,
+            plasma
+        );
+
+    colour += fresnel * vec3(1.0,0.8,0.3);
+
+    gl_FragColor =
+        vec4(colour,1.0);
+
+}`;
 
     const material = new THREE.ShaderMaterial({
 
@@ -89,7 +95,9 @@ export function createSun(scene) {
 
         vertexShader,
 
-        fragmentShader
+        fragmentShader,
+
+        transparent: false
 
     });
 
@@ -108,10 +116,8 @@ export function createSun(scene) {
 
     scene.add(sun);
 
-    //----------------------------------------
     // Inner Core
-    //----------------------------------------
-
+    
     const core = new THREE.Mesh(
 
         new THREE.SphereGeometry(0.72,64,64),
@@ -126,33 +132,6 @@ export function createSun(scene) {
 
     scene.add(core);
 
-    //----------------------------------------
-    // Corona
-    //----------------------------------------
-
-    const corona = new THREE.Mesh(
-
-        new THREE.SphereGeometry(
-            1.15,
-            128,
-            128
-        ),
-
-        new THREE.MeshBasicMaterial({
-
-            color:0xffaa22,
-
-            transparent:true,
-
-            opacity:0.12,
-
-            side:THREE.BackSide
-
-        })
-
-    );
-
-    scene.add(corona);
 
     // Animation
 
@@ -163,17 +142,6 @@ export function createSun(scene) {
         sun.rotation.y += 0.0015;
 
         core.rotation.y -= 0.0008;
-
-        corona.rotation.y += 0.003;
-
-        corona.rotation.x += 0.001;
-
-        const pulse =
-            1 +
-            Math.sin(uniforms.time.value*2.5)
-            *0.03;
-
-        corona.scale.setScalar(pulse);
 
     }
 

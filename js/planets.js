@@ -5,13 +5,15 @@ export function createPlanets(scene) {
 
     const planets = [];
 
+    const clickablePlanets = [];
+
     const planetData = [
 
     {
         name: "About Me",
         radius: 2.6,
         size: 0.22,
-        speed: 0.26,
+        speed: 0.21,
         type: "earth"
     },
 
@@ -19,7 +21,7 @@ export function createPlanets(scene) {
         name: "Skills",
         radius: 3.5,
         size: 0.30,
-        speed: 0.24,
+        speed: 0.19,
         type: "crystal"
     },
 
@@ -27,7 +29,7 @@ export function createPlanets(scene) {
         name: "Projects",
         radius: 4.5,
         size: 0.28,
-        speed: 0.22,
+        speed: 0.17,
         type: "gas"
     },
 
@@ -35,7 +37,7 @@ export function createPlanets(scene) {
         name: "Resume",
         radius: 5.7,
         size: 0.35,
-        speed: 0.20,
+        speed: 0.15,
         type: "rock"
     },
 
@@ -43,25 +45,29 @@ export function createPlanets(scene) {
         name: "Contact",
         radius: 7.0,
         size: 0.25,
-        speed: 0.18,
+        speed: 0.13,
         type: "ice"
     }
 
 ];
 
+    for (const data of planetData) {
+
     const orbitMaterial = new THREE.LineBasicMaterial({
-
-    color: 0xffffff,
-
-    transparent: true,
-
-    opacity: 0.15
-
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.15
     });
 
     for (const data of planetData) {
 
     const pivot = new THREE.Object3D();
+
+    const orbitMaterial = new THREE.LineBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.15
+    });
 
     scene.add(pivot);
 
@@ -107,7 +113,14 @@ scene.add(orbit);
 
     planet.position.x = data.radius;
 
+    planet.userData = {
+    ...data,
+    orbit
+};
+
     pivot.add(planet);
+
+    clickablePlanets.push(planet);
 
     planets.push({
 
@@ -135,12 +148,17 @@ scene.add(orbit);
 
     }
 
+    console.log("returning: ", clickablePlanets);
+
     return{
 
         planets,
+
+        clickablePlanets,
 
         update
 
     };
 
+}
 }
