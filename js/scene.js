@@ -14,6 +14,147 @@ export function createScene() {
     ];
     let selectedPlanet = null;
 
+    const pages = {
+
+    "About Me": {
+
+        title: "ABOUT_ME",
+
+        html: 
+            `<h2>JC THOMSON</h2>
+
+            <p>
+                Final year BSc IT student at North-West University in South Africa with a passion
+                for learning new things, software engineering, networking and interactive project
+                development.
+            </p>
+
+            <br>
+
+            <p>
+                I enjoy solving difficult problems and building
+                software that is both useful and visually engaging.
+            </p>
+        `
+    },
+
+    "Skills": {
+
+        title: "SKILLS",
+
+        html: `
+            <h2>Languages</h2>
+
+            <ul>
+                <li>C#</li>
+                <li>C++</li>
+                <li>Python</li>
+                <li>Java</li>
+                <li>JavaScript</li>
+                <li>SQL</li>
+                <li>Bash</li>
+            </ul>
+
+            <br>
+
+            <h2>Frameworks</h2>
+
+            <ul>
+                <li>ASP.NET</li>
+                <li>.NET MAUI</li>
+                <li>Three.js</li>
+            </ul>
+        `
+    },
+
+    "Projects": {
+
+        title: "PROJECTS",
+
+        html: `
+            <h2>Current Projects</h2>
+
+            <ul>
+
+                <li>Soup Kitchen Management System</li>
+
+                <li>Three.js Portfolio</li>
+
+                <li>Crypto Arbitrage Monitor</li>
+
+            </ul>
+        `
+    },
+
+    "Resume": {
+
+    title: "RESUME",
+
+    html: 
+    `   <p>
+            Download my latest CV below.
+        </p>
+
+            <br>
+
+            <a href="assets/documents/JC Thomson CV.pdf"
+               download
+               class="terminalButton">
+
+                Download CV
+
+            </a>
+
+        `
+    },
+
+   "Contact": {
+
+    title: "CONTACT",
+
+    html: `
+
+        <p>
+
+            📧
+            <a href="mailto:YOUR_EMAIL@gmail.com">
+                jcchthomson@gmail.com
+            </a>
+
+        </p>
+
+        <br>
+
+        <p>
+
+            💻
+            <a href="https://github.com/jc-thomson"
+               target="_blank">
+
+                GitHub
+
+            </a>
+
+        </p>
+
+        <br>
+
+        <p>
+
+            💼
+            <a href="https://linkedin.com/in/jcthomson"
+               target="_blank">
+
+                LinkedIn
+
+            </a>
+
+        </p>
+
+    `
+},
+
+};
     const canvas = document.getElementById("bg");
 
     const scene = new THREE.Scene();
@@ -84,11 +225,33 @@ export function createScene() {
 
     let hoveredPlanet = null;
 
-    const returnButton =
-    document.getElementById("returnButton");
+    //const returnButton =
+    //document.getElementById("returnButton");
 
-    returnButton.addEventListener("click", () => {
+    const panel = document.getElementById("panel");
+
+    const panelContent = document.getElementById("panelContent");
+
+    const closePanel = document.getElementById("closePanel");
+
+    /*returnButton.addEventListener("click", () => {
         selectedPlanet = null;
+
+        panel.classList.remove("show");
+        panel.classList.add("hidden");
+
+       // labels.forEach(label => label.style.opacity = "1");
+    }); */
+
+    closePanel.addEventListener("click", () => {
+
+        selectedPlanet = null;
+
+        panel.classList.remove("show");
+        panel.classList.add("hidden");
+
+        //labels.forEach(label => label.style.opacity = "1");
+
     });
 
     window.addEventListener("mousemove", (event) => {
@@ -108,9 +271,24 @@ export function createScene() {
 
         selectedPlanet = intersects[0].object;
 
-        console.log("Selected:", selectedPlanet.userData.name);
+        const page = pages[selectedPlanet.userData.name];
 
-        }
+        panelContent.innerHTML = `
+
+        <div class="terminalHeader">
+            SYSTEM:// ${page.title}
+            </div>
+            <div class="terminalBody">
+            ${page.html}
+        </div>`;
+
+    panel.classList.remove("hidden");
+
+    panel.classList.add("show");
+
+    console.log("Selected:", selectedPlanet.userData.name);
+
+    }
 
     });
 
@@ -141,7 +319,7 @@ planets.clickablePlanets.forEach((planet, index) => {
 
     labels[index].style.left = `${x}px`;
     labels[index].style.top = `${y - 20}px`; // 20px above the planet
-
+    labels[index].style.opacity = selectedPlanet ? "0" : "1";
 });
 
 // Reset previous hover
@@ -194,7 +372,7 @@ if (hoveredPlanet) {
 //highlight selected
     if (selectedPlanet) {
 
-    returnButton.classList.remove("hidden");
+   // returnButton.classList.remove("hidden");
 
     selectedPlanet.scale.lerp(
         new THREE.Vector3(1.4, 1.4, 1.4),
@@ -223,7 +401,7 @@ if (hoveredPlanet) {
 }
 else{
 
-    returnButton.classList.add("hidden");
+    //returnButton.classList.add("hidden");
 
     camera.position.lerp(defaultCameraPosition, 0.05);
 
