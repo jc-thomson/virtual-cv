@@ -20,21 +20,6 @@ CSS
 JavaScript (ES Modules)
 Three.js
 
-Project Structure:
-Portfolio/
-│
-├── assets/
-├── css/
-│   └── style.css
-├── js/
-│   ├── main.js
-│   ├── scene.js
-│   ├── planets.js
-│   ├── planetGenerator.js
-│   ├── stars.js
-│   └── sun.js
-└── index.html
-
 Running the Project:
 
 Clone the repository:
