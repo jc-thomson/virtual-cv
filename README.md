@@ -35,9 +35,10 @@ open the Github Pages page at: https://jc-thomson.github.io/virtual-cv/
 The project uses JavaScript modules so opening index.html directly from the file system will not work.
 
 Future Improvements:
-Expand the Projects section with project cards and screenshots
-Improve mobile support
-Continue refining the interface
+
+*Expand the Projects section with project cards and screenshots
+*Improve mobile support
+*Continue refining the interface
 
 Author:
 
